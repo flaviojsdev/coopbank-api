@@ -63,6 +63,21 @@ CREATE TABLE transacao (
   FOREIGN KEY (conta_id) REFERENCES conta(id)
 );
 
+🛠️ Testando a API
+
+Você pode testar os endpoints usando ferramentas como Postman ou Insomnia:
+
+Abra a ferramenta e crie uma nova requisição.
+
+Use os métodos e URLs listados na seção Endpoints principais.
+
+Configure o corpo da requisição como nos exemplos em Exemplos de requisições (JSON).
+
+Envie a requisição e veja a resposta JSON retornada pela API.
+
+💡 Dica: para acessar o H2 e ver os dados persistidos, use http://localhost:8080/h2-console
+ com as credenciais fornecidas.
+
 📡 Endpoints principais
 Método	Endpoint	Descrição
 POST	/correntistas	Cadastrar correntista
