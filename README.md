@@ -1,84 +1,144 @@
-# CoopBank API 🏦
+# 🏦 CoopBank API
 
-API RESTful em Spring Boot e H2 para gerenciamento de correntistas, contas e transações bancárias.
+API RESTful desenvolvida em **Spring Boot** com banco de dados **H2 em memória**, para gerenciamento de **correntistas, contas e transações bancárias**.
 
-## 🚀 Tecnologias
-- Java 8+
-- Spring Boot 2.7+
-- Spring Data JPA / Hibernate
-- Banco de Dados H2 (em memória)
+---
+
+## 🚀 Tecnologias utilizadas
+
+- Java 17+
+- Spring Boot 3.x
+- Spring Web
+- Spring Data JPA (Hibernate)
+- Banco H2 (em memória)
 - Maven
 
-## ⚙️ Como rodar
+---
 
+## ⚙️ Como rodar o projeto localmente
+
+### 1️⃣ Clonar o repositório
 ```bash
-mvn clean package
+git clone https://github.com/flaviojsdev/coopbank-api.git
+cd coopbank-api
+
 mvn spring-boot:run
 
-Acesse a API: http://localhost:8080
+3️⃣ Acessar no navegador
+
+API: http://localhost:8080
 
 Console H2: http://localhost:8080/h2-console
 
-Credenciais H2:
+Credenciais do H2:
 
 JDBC URL: jdbc:h2:mem:coopbank
-
 Usuário: sa
-
 Senha: (vazio)
+
+🗄️ Estrutura do Banco (schema.sql)
+
+O H2 é criado automaticamente, mas o esquema equivalente seria:
+
+CREATE TABLE correntista (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  nome VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE conta (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  tipo VARCHAR(20) NOT NULL,
+  saldo DOUBLE,
+  limite DOUBLE,
+  correntista_id BIGINT,
+  FOREIGN KEY (correntista_id) REFERENCES correntista(id)
+);
+
+CREATE TABLE transacao (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  conta_id BIGINT,
+  tipo VARCHAR(20),
+  valor DOUBLE,
+  data TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (conta_id) REFERENCES conta(id)
+);
 
 📡 Endpoints principais
 Método	Endpoint	Descrição
-POST	/correntistas	Cria correntista
-GET	/correntistas	Lista todos os correntistas
-POST	/contas/corrente?correntistaId=X&saldo=Y&limite=Z	Cria conta corrente
-POST	/contas/poupanca?correntistaId=X&saldo=Y	Cria conta poupança
-POST	/contas/{id}/deposito?valor=X	Deposita valor na conta
-POST	/contas/{id}/saque?valor=X	Saca valor da conta
-POST	/contas/poupanca/{id}/rendimento?taxa=X	Aplica rendimento mensal na poupança
+POST	/correntistas	Cadastrar correntista
+GET	/correntistas	Listar correntistas
+POST	/contas/corrente	Criar conta corrente
+POST	/contas/poupanca	Criar conta poupança
+POST	/contas/{id}/deposito	Realizar depósito
+POST	/contas/{id}/saque	Realizar saque
+POST	/contas/poupanca/{id}/rendimento?taxa=X	Aplicar rendimento (poupança)
+🧪 Exemplos de requisições (JSON)
+➕ Criar correntista
 
-Observação:
+POST http://localhost:8080/correntistas
 
-Conta Corrente permite saque até saldo + limite.
-
-Conta Poupança permite saque apenas até o saldo.
-
-Juros em conta corrente ainda não implementados.
-
-📦 Exemplo de uso (JSON)
-Criar correntista
-POST /correntistas
 {
   "nome": "João Silva"
 }
 
-Criar conta corrente
-POST /contas/corrente?correntistaId=1&saldo=100&limite=200
+🏦 Criar conta corrente
 
-Criar conta poupança
-POST /contas/poupanca?correntistaId=1&saldo=500
+POST http://localhost:8080/contas/corrente
 
-Depósito
-POST /contas/1/deposito?valor=100
+{
+  "correntistaId": 1,
+  "saldoInicial": 1000.0,
+  "limite": 500.0
+}
 
-Saque
-POST /contas/1/saque?valor=50
+💰 Criar conta poupança
 
-Aplicar rendimento na poupança
-POST /contas/poupanca/2/rendimento?taxa=0.05
+POST http://localhost:8080/contas/poupanca
 
-Correntista
-   └─ id, nome
-   └─ possui várias Contas
-          ├─ Conta Corrente
-          │     ├─ id, saldo, limite
-          │     └─ operações:
-          │           ├─ Depósito
-          │           └─ Saque (até saldo + limite)
-          └─ Conta Poupança
-                ├─ id, saldo
-                └─ operações:
-                      ├─ Depósito
-                      ├─ Saque (até saldo)
-                      └─ Aplicar rendimento (mensal, taxa X)
+{
+  "correntistaId": 1,
+  "saldoInicial": 2000.0
+}
 
+💵 Fazer depósito
+
+POST http://localhost:8080/contas/1/deposito
+
+{
+  "valor": 300.0
+}
+
+💸 Fazer saque
+
+POST http://localhost:8080/contas/1/saque
+
+{
+  "valor": 150.0
+}
+
+📈 Aplicar rendimento na poupança
+
+POST http://localhost:8080/contas/poupanca/1/rendimento?taxa=0.05
+
+📂 Estrutura do projeto
+src/
+ ├─ main/java/br/com/cooperativa/coopbank_api/
+ │   ├─ controller/        # Controladores REST
+ │   ├─ model/             # Entidades JPA
+ │   ├─ repository/        # Interfaces JPA
+ │   └─ CoopbankApiApplication.java
+ └─ resources/
+     ├─ application.properties
+     └─ schema.sql (opcional)
+
+💡 Observações
+
+O banco H2 é reiniciado a cada execução (por ser em memória).
+
+Todos os endpoints podem ser testados via Postman ou Insomnia.
+
+O projeto segue as boas práticas REST e separação de responsabilidades.
+
+✍️ Autor: Flávio J. S.
+
+📅 Ano: 2025
