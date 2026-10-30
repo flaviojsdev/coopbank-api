@@ -1,8 +1,18 @@
-# 🏦 CoopBank API
+## Sobre o projeto
 
-API RESTful desenvolvida em **Spring Boot** com banco de dados **H2 em memória**, para gerenciamento de **correntistas, contas e transações bancárias**.
+O **CoopBank API** foi desenvolvido individualmente como parte de um desafio técnico para uma oportunidade profissional.
 
----
+O projeto teve como objetivo desenvolver uma API REST para gerenciamento de operações bancárias, utilizando Java e Spring Boot.
+
+Durante o desenvolvimento, utilizei ferramentas de inteligência artificial como apoio à consulta, aprendizagem e resolução de dúvidas técnicas.
+
+### Funcionalidades
+
+- Cadastro e consulta de correntistas.
+- Criação de contas correntes e poupanças.
+- Operações de depósito e saque.
+- Cálculo de rendimento de poupança.
+
 
 ## 🚀 Tecnologias utilizadas
 
